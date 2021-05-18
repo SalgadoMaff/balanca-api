@@ -6,4 +6,4 @@ router.get('/', UserService.findAll)
 router.post('/', UserService.create)
 router.post('/login', UserService.login)
 
-module.exports = app => app.use('/users', router);
+module.exports = app => app.use('/users', router)

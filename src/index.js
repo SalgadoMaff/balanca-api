@@ -71,6 +71,7 @@ const registerRoutes = app => {
     })
   })
   require('./controller/UserController')(app)
+  require('./controller/FoodController')(app)
 }
 
 const errorHandlerMiddleware = app => {

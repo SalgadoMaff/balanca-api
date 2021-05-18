@@ -7,7 +7,7 @@ const findAll = async (req, res, next) => {
     const users = await User.find()
 
     return res.status(200).json(users)
-  } catch (error) {
+  } catch(error) {
     next(error)
   }
 }
@@ -41,7 +41,7 @@ const create = async (req, res, next) => {
       role: req.body.role
     })
     return res.status(201).send()
-  } catch (error) {
+  } catch(error) {
     next(error)
   }
 }
@@ -70,7 +70,7 @@ const login = async (req, res, next) => {
     }
     const token = jwt.sign(tokenData, process.env.AUTH_SECRET, {expiresIn: '1d'})
     res.json({accessToken: token})
-  } catch (error) {
+  } catch(error) {
     next(error)
   }
 }
