@@ -7,7 +7,7 @@ const Meal = require('../model/Meal')
 
 const findAll = async (req, res, next) => {
   try {
-    const users = await User.find()
+    const users = await User.find({}, { meals : 0 })
 
     return res.status(200).json(users)
   } catch(error) {
@@ -107,4 +107,21 @@ const createMeal = async (req, res, next) => {
   }
 }
 
-module.exports = { findAll, create, login, createMeal }
+const findMealByUser = async (req, res, next) => {
+  try {
+    if (!req.params.userId) {
+      throw new Error(`The parameter 'userId' is invalid.`)
+    }
+
+    const user = await User.findById(req.params.userId).populate('meals')
+    if (!user) {
+      throw new Error(`The user with id '${req.params.userId}' was not found.`)
+    }
+
+    res.json(user)
+  } catch(error) {
+    next(error)
+  }
+}
+
+module.exports = { findAll, create, login, createMeal, findMealByUser }

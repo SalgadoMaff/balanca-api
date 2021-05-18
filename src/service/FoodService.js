@@ -10,6 +10,23 @@ const findAll = async (req, res, next) => {
   }
 }
 
+const findById = async (req, res, next) => {
+  try {
+    if (!req.params.foodId) {
+      throw new Error(`The parameter 'foodId' is invalid.`)
+    }
+
+    const food = await Food.findById(req.params.foodId)
+    if (!food) {
+      throw new Error(`The food with id '${req.params.foodId}' was not found.`)
+    }
+
+    res.json(food)
+  } catch(error) {
+    next(error)
+  }
+}
+
 const create = async (req, res, next) => {
   try {
     if (!req.body.name) {
@@ -47,4 +64,4 @@ const remove = async (req, res, next) => {
   }
 }
 
-module.exports = { findAll, create, remove }
+module.exports = { findAll, findById, create, remove }
