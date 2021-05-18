@@ -53,7 +53,7 @@ const startAuthMiddleware = app => {
 
       token = token.split(' ')[1]
       try {
-        req.userDataObject = jwt.verify(token, process.env.AUTH_SECRET)
+        req.user = jwt.verify(token, process.env.AUTH_SECRET)
         return next()
       } catch (error) {
         return res.status(401).json({message: "Token invalido!"})
