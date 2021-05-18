@@ -1,6 +1,9 @@
-const User = require('../model/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+
+const User = require('../model/User')
+const Food = require('../model/Food')
+const Meal = require('../model/Meal')
 
 const findAll = async (req, res, next) => {
   try {
@@ -75,4 +78,33 @@ const login = async (req, res, next) => {
   }
 }
 
-module.exports = { findAll, create, login }
+const createMeal = async (req, res, next) => {
+  try {
+    if (!req.params.userId) {
+      throw new Error(`The parameter 'userId' is invalid.`)
+    }
+    if (req.body.length === undefined || req.body.length < 1) {
+      throw new Error(`The parameter 'meals' is invalid.`)
+    }
+
+    let user = await User.findById(req.params.userId)
+    if (!user) {
+      throw new Error(`The user with id '${req.params.userId}' was not found.`)
+    }
+
+    for (const meal of req.body) {
+      const food = await Food.findById(meal.foodId)
+      if (!food) {
+        throw new Error(`The food with id '${meal.foodId}' was not found.`)
+      }
+    }
+
+    const meal = await Meal.create({ plate: req.body })
+    await User.updateOne({ _id: req.params.userId }, { $push: { meals: meal._id } }, { new: true })
+    res.status(201).send()
+  } catch(error) {
+    next(error)
+  }
+}
+
+module.exports = { findAll, create, login, createMeal }

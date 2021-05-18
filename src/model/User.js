@@ -17,6 +17,11 @@ const userSchema = mongoose.Schema({
   role: {
     type: String,
     required: true
+  },
+  meals: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Meal',
+    default: []
   }
 })
 
