@@ -22,7 +22,7 @@ const connectToDatabase = async () => {
   console.log('Connected!')
 }
 
-const startServer = () => {
+const startServer = async () => {
   console.log('Starting server...')
   const app = express()
 
