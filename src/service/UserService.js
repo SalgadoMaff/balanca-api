@@ -15,6 +15,21 @@ const findAll = async (req, res, next) => {
   }
 }
 
+const findBySession = async (req, res, next) => {
+  try {
+    const {username} = req.user
+    const user = await User.findOne({username}, { meals : 0 })
+
+    if (!user) {
+      throw new Error('User not found.')
+    }
+
+    return res.status(200).json(user)
+  } catch(error) {
+    next(error)
+  }
+}
+
 const create = async (req, res, next) => {
   try {
     if (!req.body.name) {
@@ -57,7 +72,7 @@ const login = async (req, res, next) => {
     if (!req.body.password) {
       throw new Error(`The parameter 'password' is required.`)
     }
-    
+
     const user = await User.findOne({username: req.body.username}).select('+password')
     if (!user) {
       return res.status(404).json({message: 'Invalid user.'})
@@ -124,4 +139,4 @@ const findMealByUser = async (req, res, next) => {
   }
 }
 
-module.exports = { findAll, create, login, createMeal, findMealByUser }
+module.exports = { findAll, findBySession, create, login, createMeal, findMealByUser }
