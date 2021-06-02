@@ -128,7 +128,9 @@ const findMealByUser = async (req, res, next) => {
       throw new Error(`The parameter 'userId' is invalid.`)
     }
 
-    const user = await User.findById(req.params.userId).populate('meals')
+    const user = await User.findById(req.params.userId)
+        .select('meals')
+        .populate({ path: 'meals', populate: 'plate.foodId' })
     if (!user) {
       throw new Error(`The user with id '${req.params.userId}' was not found.`)
     }
