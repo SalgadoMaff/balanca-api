@@ -33,6 +33,7 @@ const startServer = async () => {
   startAuthMiddleware(app)
   registerRoutes(app)
   errorHandlerMiddleware(app)
+  await migrationsExecutor()
 
   app.listen(PORT, () => {
     console.log(`API running at port ${PORT}`)
@@ -79,6 +80,10 @@ const errorHandlerMiddleware = app => {
     console.error(err.stack)
     res.status(500).json({message: err.message})
   })
+}
+
+const migrationsExecutor = async () => {
+  await require('./service/MigrationService')()
 }
 
 const init = (async () => {
