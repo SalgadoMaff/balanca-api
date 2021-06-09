@@ -46,10 +46,16 @@ const create = async (req, res, next) => {
   }
 }
 
-const remove = async (req, res, next) => {
+const update = async (req, res, next) => {
   try {
     if(!req.params.foodId) {
       throw new Error(`The parameter 'foodId' is required.`)
+    }
+    if (!req.body.name) {
+      throw new Error(`The parameter 'name' is invalid.`)
+    }
+    if (!req.body.calPerGram) {
+      throw new Error(`The parameter 'calPerGram' is invalid.`)
     }
 
     const food = await Food.findById(req.params.foodId)
@@ -57,11 +63,11 @@ const remove = async (req, res, next) => {
       throw new Error(`The food with id '${req.params.foodId}' was not found.`)
     }
 
-    await Food.findByIdAndDelete(req.params.foodId)
+    await Food.findByIdAndUpdate(req.params.foodId, req.body)
     res.status(200).send()
   } catch(error) {
     next(error)
   }
 }
 
-module.exports = { findAll, findById, create, remove }
+module.exports = { findAll, findById, create, update }
