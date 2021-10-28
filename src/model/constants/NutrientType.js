@@ -1,0 +1,7 @@
+module.exports = {
+    CARBOHYDRATE: 'CARBOHYDRATE',
+    PROTEIN: 'PROTEIN',
+    FAT: 'FAT',
+    VITAMIN: 'VITAMIN',
+    MINERALS: 'MINERALS'
+}

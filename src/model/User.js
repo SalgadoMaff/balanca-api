@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const userSchema = mongoose.Schema({
+const schema = mongoose.Schema({
   name: {
     type: String,
     required: true
@@ -17,12 +17,7 @@ const userSchema = mongoose.Schema({
   role: {
     type: String,
     required: true
-  },
-  meals: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Meal',
-    default: []
   }
 })
 
-module.exports = mongoose.model('User', userSchema)
+module.exports = mongoose.model('User', schema)
