@@ -2,15 +2,13 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
 const User = require('../model/User')
-const Food = require('../model/Food')
-const Meal = require('../model/Meal')
 
 const findAll = async (req, res, next) => {
   try {
-    const users = await User.find({}, { meals : 0 })
+    const users = await User.find({}, {meals: 0})
 
     return res.status(200).json(users)
-  } catch(error) {
+  } catch (error) {
     next(error)
   }
 }
@@ -18,14 +16,14 @@ const findAll = async (req, res, next) => {
 const findBySession = async (req, res, next) => {
   try {
     const {username} = req.user
-    const user = await User.findOne({username}, { meals : 0 })
+    const user = await User.findOne({username}, {meals: 0})
 
     if (!user) {
       throw new Error('User not found.')
     }
 
     return res.status(200).json(user)
-  } catch(error) {
+  } catch (error) {
     next(error)
   }
 }
@@ -45,7 +43,7 @@ const create = async (req, res, next) => {
       throw new Error(`The parameter 'role' is invalid. The possible values are ADMIN and USER.`)
     }
 
-    const userExists = await User.findOne({ username: req.body.username })
+    const userExists = await User.findOne({username: req.body.username})
     if (userExists) {
       throw new Error(`The user with username '${req.body.username}' already exists.`)
     }
@@ -59,7 +57,7 @@ const create = async (req, res, next) => {
       role: req.body.role
     })
     return res.status(201).send()
-  } catch(error) {
+  } catch (error) {
     next(error)
   }
 }
@@ -83,62 +81,15 @@ const login = async (req, res, next) => {
     }
 
     const tokenData = {
+      id: user._id,
       username: user.username,
       role: user.role
     }
-    const token = jwt.sign(tokenData, process.env.AUTH_SECRET, {expiresIn: '1d'})
+    const token = jwt.sign(tokenData, process.env.AUTH_SECRET, {expiresIn: '1h'})
     res.json({accessToken: token})
-  } catch(error) {
+  } catch (error) {
     next(error)
   }
 }
 
-const createMeal = async (req, res, next) => {
-  try {
-    if (!req.params.userId) {
-      throw new Error(`The parameter 'userId' is invalid.`)
-    }
-    if (req.body.length === undefined || req.body.length < 1) {
-      throw new Error(`The parameter 'meals' is invalid.`)
-    }
-
-    let user = await User.findById(req.params.userId)
-    if (!user) {
-      throw new Error(`The user with id '${req.params.userId}' was not found.`)
-    }
-
-    for (const meal of req.body) {
-      const food = await Food.findById(meal.foodId)
-      if (!food) {
-        throw new Error(`The food with id '${meal.foodId}' was not found.`)
-      }
-    }
-
-    const meal = await Meal.create({ plate: req.body })
-    await User.updateOne({ _id: req.params.userId }, { $push: { meals: meal._id } }, { new: true })
-    res.status(201).send()
-  } catch(error) {
-    next(error)
-  }
-}
-
-const findMealByUser = async (req, res, next) => {
-  try {
-    if (!req.params.userId) {
-      throw new Error(`The parameter 'userId' is invalid.`)
-    }
-
-    const user = await User.findById(req.params.userId)
-        .select('meals')
-        .populate({ path: 'meals', populate: 'plate.foodId' })
-    if (!user) {
-      throw new Error(`The user with id '${req.params.userId}' was not found.`)
-    }
-
-    res.json(user)
-  } catch(error) {
-    next(error)
-  }
-}
-
-module.exports = { findAll, findBySession, create, login, createMeal, findMealByUser }
+module.exports = {findAll, findBySession, create, login}
