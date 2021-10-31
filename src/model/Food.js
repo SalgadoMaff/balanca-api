@@ -14,7 +14,7 @@ const Measurement = {
 }
 
 const NutritionFact = {
-  nutrientId: {
+  nutrient: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Nutrient',
     required: true
