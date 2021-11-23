@@ -43,7 +43,7 @@ const create = async (req, res, next) => {
         throw new Error(`The nutrient with id '${nutritionFact.nutrient}' was not found.`)
       }
     })
-
+    
     await Food.create({
       name: req.body.name,
       servingSize: req.body.servingSize,
