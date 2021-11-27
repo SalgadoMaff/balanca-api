@@ -6,7 +6,12 @@ const findByUser = async (req, res, next) => {
       throw new Error(`The current user is invalid.`)
     }
 
-    const meals = await Meal.find({userId: req.user.id})
+    const populateQuery = {
+      path: 'foods.foodId',
+      select: ['name', '_id']
+    }
+
+    const meals = await Meal.find({userId: req.user.id}).populate(populateQuery)
 
     res.json(meals)
   } catch (error) {
