@@ -13,6 +13,18 @@ const Measurement = {
   }
 }
 
+const NutritionFact = {
+  nutrient:{
+    type:String,
+    required: true
+  },
+  amount:{
+    type: Measurement,
+    required: true
+  }
+}
+
+
 const Food = {
   foodId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -21,6 +33,14 @@ const Food = {
   },
   quantity: {
     type: Measurement,
+    required: true
+  },
+  ProportionalCal:{
+    type:Number,
+    required: true
+  },
+  ProportionalNutritionFacts:{
+    type: [NutritionFact],
     required: true
   }
 }
